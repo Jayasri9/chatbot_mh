@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Therapeutic Chatbot</title>
+    <style>
+        body {
+            font-family:Tahoma, sans-serif;
+            background-color: #0b0a0a;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            color: rgb(202, 202, 225);
+        }
+        h2 {
+            text-align: center;
+        }
+        .chat-container {
+            width: 500px;
+            background: #000000;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #000dc4;
+        }
+
+        #chat-box {
+            height: 450px;
+            overflow-y: auto;
+            border: 1px solid #000dc4;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #000000;
+            color: rgb(232, 231, 254);
+        }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 10px;
+            background-color: #000000;
+            color: rgb(243, 243, 243);
+            border: 1px solid #f9f9fa;;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #000dc4;;
+            color: rgb(248, 238, 244);
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <h2>Chat with Jamila</h2>
+        <div id="chat-box"></div>
+        <input id="msg" type="text" placeholder="Talk your mind out" autofocus>
+        <button onclick="send()">Send</button>
+    </div>
+    <script>
+        function send() {
+            const msg = document.getElementById("msg").value;
+            fetch("/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "msg=" + encodeURIComponent(msg)
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("chat-box").innerHTML += "<p><b>You:</b> " + msg + "</p>";
+                document.getElementById("chat-box").innerHTML += "<p><b>Bot:</b> " + data.response + "</p>";
+                document.getElementById("msg").value = "";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+        }
+    </script>
+</body>
+</html>
